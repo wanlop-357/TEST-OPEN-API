@@ -15,12 +15,12 @@ import {
  */
 export class CreateUserDto {
   @ApiProperty({
-    description: 'Email ของผู้ใช้',
+    description: 'Email ของผู้ใช้ในรูปแบบ field ภายนอก user_email',
     example: 'user@example.com',
     format: 'email',
   })
   @IsEmail({}, { message: 'Invalid email format' })
-  email!: string;
+  user_email!: string;
 
   @ApiProperty({
     description: 'รหัสผ่าน อย่างน้อย 8 ตัวอักษร',

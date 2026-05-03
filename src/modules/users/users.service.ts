@@ -28,7 +28,7 @@ export class UsersService {
   async create(dto: CreateUserDto): Promise<UserResponseDto> {
     return this.usersRepository.withTransaction(() => {
       this.assertPasswordBusinessRules(dto.password);
-      this.assertEmailAvailable(dto.email);
+      this.assertEmailAvailable(dto.user_email);
 
       const user = this.usersRepository.create(dto, this.hashPassword(dto.password));
 
@@ -41,7 +41,7 @@ export class UsersService {
    */
   async bulkCreate(dto: BulkCreateUsersDto): Promise<UserResponseDto[]> {
     return this.usersRepository.withTransaction(() => {
-      const emails = dto.users.map((user) => user.email.toLowerCase());
+      const emails = dto.users.map((user) => user.user_email.toLowerCase());
       const duplicatedEmail = emails.find((email, index) => emails.indexOf(email) !== index);
 
       if (duplicatedEmail !== undefined) {
@@ -50,7 +50,7 @@ export class UsersService {
 
       dto.users.forEach((user) => {
         this.assertPasswordBusinessRules(user.password);
-        this.assertEmailAvailable(user.email);
+        this.assertEmailAvailable(user.user_email);
       });
 
       return this.usersRepository
@@ -96,7 +96,7 @@ export class UsersService {
   async update(id: string, dto: UpdateUserDto): Promise<UserResponseDto> {
     return this.usersRepository.withTransaction(() => {
       const user = this.getExistingUser(id);
-      const nextEmail = dto.email?.toLowerCase();
+      const nextEmail = dto.user_email?.toLowerCase();
 
       if (nextEmail !== undefined && nextEmail !== user.email) {
         this.assertEmailAvailable(nextEmail);
@@ -173,7 +173,7 @@ export class UsersService {
   private toResponseDto(user: UserEntity): UserResponseDto {
     return {
       id: user.id,
-      email: user.email,
+      user_email: user.email,
       fullName: user.fullName,
       profileImageUrl: user.profileImageUrl,
       roles: user.roles,
