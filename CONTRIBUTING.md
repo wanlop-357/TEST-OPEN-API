@@ -4,7 +4,7 @@
 
 ## API Change Workflow
 
-1. สร้าง branch จาก `develop`
+1. สร้าง branch จาก `dev`
 2. แก้ controller, DTO, service และ tests
 3. ใส่ Swagger decorators ให้ครบทุก endpoint
 4. รัน validation ในเครื่อง
@@ -60,7 +60,7 @@ Manual sync:
 ```bash
 APIDOG_PROJECT_ID=1276414 \
 APIDOG_API_TOKEN=xxx \
-APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml \
+APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml \
 npm run apidog:sync
 ```
 
@@ -79,7 +79,7 @@ npm run predeploy
 ## Branch Rules
 
 - `main`: production source, sync ไป Apidog production branch
-- `develop`: development source, sync ไป Apidog development branch
+- `dev`: development source, sync ไป Apidog development branch
 - feature branches: generate OpenAPI เพื่อ review แต่ไม่ sync เข้า production branch โดยตรง
 
 ## Reviewer Notes

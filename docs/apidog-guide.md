@@ -59,7 +59,7 @@ https://app.apidog.com/project/1276414
 
 ## Step 4: เลือก branch ให้ถูก
 
-ถ้า project มีหลาย branch ให้เลือก branch ที่ทีมใช้ก่อน import เช่น `main`, `develop`, `v1` หรือ branch production ของทีม
+ถ้า project มีหลาย branch ให้เลือก branch ที่ทีมใช้ก่อน import เช่น `main`, `dev`, `v1` หรือ branch production ของทีม
 
 ถ้า project นี้เพิ่งสร้างใหม่และยังไม่มี branch เพิ่ม ให้ใช้ default branch ไปก่อน แล้วค่อยสร้าง branch strategy หลัง import สำเร็จ
 
@@ -157,7 +157,7 @@ description: กรอง users ที่มี role นี้
 ```env
 APIDOG_PROJECT_ID=1276414
 APIDOG_API_TOKEN=your_apidog_token
-APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml
+APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml
 APIDOG_LOCALE=en-US
 APIDOG_API_VERSION=2024-03-28
 APIDOG_ENDPOINT_FOLDER_ID=0
@@ -173,7 +173,7 @@ APIDOG_PREPEND_BASE_PATH=false
 ตัวอย่าง GitHub raw URL:
 
 ```text
-https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml
+https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml
 ```
 
 ## Step 10: Manual sync ผ่าน CLI
@@ -209,8 +209,9 @@ Settings -> Secrets and variables -> Actions
 ```text
 APIDOG_PROJECT_ID=1276414
 APIDOG_API_TOKEN=your_apidog_token
-APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml
 ```
+
+ไม่ต้องเพิ่ม `APIDOG_OPENAPI_URL` สำหรับ GitHub Actions เพราะ workflow จะสร้าง raw URL จาก branch ที่เลือกให้อัตโนมัติ เช่นเลือก `dev` จะใช้ `https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml`
 
 workflow อยู่ที่:
 
@@ -218,7 +219,7 @@ workflow อยู่ที่:
 .github/workflows/apidog-sync.yml
 ```
 
-เมื่อ push เข้า `main` หรือ `develop` แล้ว workflow จะทำงานอัตโนมัติ:
+เมื่อ push เข้า `main` หรือ `dev` แล้ว workflow จะทำงานอัตโนมัติ:
 
 ```text
 push -> npm ci -> generate OpenAPI -> validate -> diff -> sync Apidog
@@ -229,7 +230,7 @@ push -> npm ci -> generate OpenAPI -> validate -> diff -> sync Apidog
 - ต้อง commit `openapi.yaml` และ `openapi.json` ไปพร้อม API change
 - `APIDOG_OPENAPI_URL` ควรชี้ไปที่ raw URL ของ branch ที่ workflow ใช้
 - ถ้าใช้ `main`: URL ควรเป็น raw URL ของ `main`
-- ถ้าใช้ `develop`: URL ควรเป็น raw URL ของ `develop`
+- ถ้าใช้ `dev`: URL ควรเป็น raw URL ของ `dev`
 
 ## Step 12: Pre-deploy Hook
 
@@ -274,7 +275,7 @@ APIDOG_API_TOKEN=your_apidog_token
 แปลว่ายังไม่ได้ตั้ง raw URL ของ OpenAPI file:
 
 ```env
-APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml
+APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml
 ```
 
 ### Auto sync ไม่ผ่าน

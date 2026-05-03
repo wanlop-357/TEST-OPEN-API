@@ -96,12 +96,12 @@ Manual sync:
 ```bash
 APIDOG_PROJECT_ID=1276414 \
 APIDOG_API_TOKEN=your_token \
-APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml \
+APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml \
 npm run apidog:check
 
 APIDOG_PROJECT_ID=1276414 \
 APIDOG_API_TOKEN=your_token \
-APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/main/openapi.yaml \
+APIDOG_OPENAPI_URL=https://raw.githubusercontent.com/wanlop-357/TEST-OPEN-API/dev/openapi.yaml \
 npm run apidog:sync
 ```
 

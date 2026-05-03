@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - develop
+      - dev
     paths:
       - openapi.yaml
       - openapi.json
@@ -22,7 +22,7 @@ jobs:
     env:
       APIDOG_PROJECT_ID: ${{ secrets.APIDOG_PROJECT_ID }}
       APIDOG_API_TOKEN: ${{ secrets.APIDOG_API_TOKEN }}
-      APIDOG_OPENAPI_URL: ${{ secrets.APIDOG_OPENAPI_URL }}
+      APIDOG_OPENAPI_URL: ${{ format('https://raw.githubusercontent.com/{0}/{1}/openapi.yaml', github.repository, github.ref_name) }}
       APIDOG_LOCALE: en-US
       APIDOG_API_VERSION: 2024-03-28
       APIDOG_ENDPOINT_FOLDER_ID: 0
