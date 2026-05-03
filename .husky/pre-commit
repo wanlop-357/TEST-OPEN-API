@@ -1,0 +1,3 @@
+npm run openapi:generate
+npx lint-staged
+git add openapi.yaml openapi.json

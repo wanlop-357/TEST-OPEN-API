@@ -1,0 +1,1053 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "description": "ใช้ตรวจว่า API service พร้อมรับ request หรือไม่",
+        "operationId": "HealthController_getHealth",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "API service ทำงานปกติ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ข้อมูล request ไม่ถูกต้อง",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ไม่ได้รับอนุญาตหรือ token ไม่ถูกต้อง",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "เกิดข้อผิดพลาดภายในระบบ",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "summary": "ตรวจสถานะ API",
+        "tags": [
+          "Health"
+        ]
+      }
+    },
+    "/users": {
+      "post": {
+        "description": "Create a new user account with unique email and password business rules.",
+        "operationId": "UsersController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Business rule violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Create user",
+        "tags": [
+          "users"
+        ]
+      },
+      "get": {
+        "description": "List users with pagination, filtering, search, and sorting support.",
+        "operationId": "UsersController_findMany",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "description": "หมายเลขหน้าที่ต้องการ",
+            "schema": {
+              "minimum": 1,
+              "default": 1,
+              "example": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "description": "จำนวนรายการต่อหน้า",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20,
+              "example": 20,
+              "type": "number"
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "description": "field ที่ใช้ sort",
+            "schema": {
+              "enum": [
+                "createdAt",
+                "updatedAt",
+                "email",
+                "fullName"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "order",
+            "required": false,
+            "in": "query",
+            "description": "ทิศทางการ sort",
+            "schema": {
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "ค้นหาจาก email หรือชื่อ",
+            "schema": {
+              "example": "somchai",
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "required": false,
+            "in": "query",
+            "description": "กรองด้วย email แบบตรงตัว",
+            "schema": {
+              "format": "email",
+              "example": "user@example.com",
+              "type": "string"
+            }
+          },
+          {
+            "name": "role",
+            "required": false,
+            "in": "query",
+            "description": "กรอง users ที่มี role นี้",
+            "schema": {
+              "example": "admin",
+              "type": "string"
+            }
+          },
+          {
+            "name": "includeDeleted",
+            "required": false,
+            "in": "query",
+            "description": "รวมรายการที่ถูก soft delete แล้วหรือไม่",
+            "schema": {
+              "example": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserListResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "List users",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/bulk": {
+      "post": {
+        "description": "Create multiple users in a single transaction-like operation.",
+        "operationId": "UsersController_bulkCreate",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BulkCreateUsersDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Users created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Bulk payload violates business rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Bulk create users",
+        "tags": [
+          "users"
+        ]
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "description": "Get a single active user by id.",
+        "operationId": "UsersController_findOne",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User id",
+            "schema": {
+              "example": "5b31b752-89d1-4db2-90e8-3f83c2d06a7b",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User returned successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Get user by id",
+        "tags": [
+          "users"
+        ]
+      },
+      "patch": {
+        "description": "Update user profile, email, roles, or password.",
+        "operationId": "UsersController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User id",
+            "schema": {
+              "example": "5b31b752-89d1-4db2-90e8-3f83c2d06a7b",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Email already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Business rule violation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Update user",
+        "tags": [
+          "users"
+        ]
+      },
+      "delete": {
+        "description": "Soft delete a user by setting deletedAt without removing data permanently.",
+        "operationId": "UsersController_remove",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "description": "User id",
+            "schema": {
+              "example": "5b31b752-89d1-4db2-90e8-3f83c2d06a7b",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User soft deleted successfully"
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponseDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "JWT-auth": []
+          }
+        ],
+        "summary": "Soft delete user",
+        "tags": [
+          "users"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "TEST Open API",
+    "description": "OpenAPI documentation generated from NestJS source code for ApiDoc.io publishing.",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [
+    {
+      "name": "Health",
+      "description": "Service health check endpoints"
+    },
+    {
+      "name": "users",
+      "description": "User management endpoints"
+    }
+  ],
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development"
+    },
+    {
+      "url": "https://staging-api.example.com",
+      "description": "Staging"
+    },
+    {
+      "url": "https://api.example.com",
+      "description": "Production"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "JWT-auth": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http",
+        "description": "Paste JWT access token without Bearer prefix."
+      }
+    },
+    "schemas": {
+      "HealthResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true,
+            "description": "สถานะสำเร็จของ response"
+          },
+          "status": {
+            "type": "string",
+            "example": "ok",
+            "description": "สถานะ health check"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2026-05-02T10:30:00.000Z",
+            "description": "เวลาปัจจุบันของ server ในรูปแบบ ISO string"
+          }
+        },
+        "required": [
+          "success",
+          "status",
+          "timestamp"
+        ]
+      },
+      "ErrorDetailDto": {
+        "type": "object",
+        "properties": {
+          "field": {
+            "type": "string",
+            "example": "email",
+            "description": "ชื่อ field หรือ path ที่เกิด error"
+          },
+          "message": {
+            "type": "string",
+            "example": "email must be an email",
+            "description": "รายละเอียด error ของ field นั้น"
+          }
+        },
+        "required": [
+          "field",
+          "message"
+        ]
+      },
+      "ErrorResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false,
+            "description": "สถานะสำเร็จของ response"
+          },
+          "requestId": {
+            "type": "string",
+            "example": "req_01hzz6qk4vx8b9n2",
+            "description": "Request ID สำหรับ trace log และ Sentry"
+          },
+          "statusCode": {
+            "type": "number",
+            "example": 400,
+            "description": "HTTP status code"
+          },
+          "error": {
+            "type": "string",
+            "example": "Bad Request",
+            "description": "ประเภทของ error"
+          },
+          "message": {
+            "type": "string",
+            "example": "Validation failed",
+            "description": "ข้อความ error สำหรับ client"
+          },
+          "path": {
+            "type": "string",
+            "example": "/api/v1/users",
+            "description": "Path ที่เกิด error"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2026-05-02T10:30:00.000Z",
+            "description": "เวลาที่เกิด error ในรูปแบบ ISO string"
+          },
+          "details": {
+            "description": "รายละเอียด error ราย field",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ErrorDetailDto"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "requestId",
+          "statusCode",
+          "error",
+          "message",
+          "path",
+          "timestamp"
+        ]
+      },
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email ของผู้ใช้",
+            "example": "user@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "รหัสผ่าน อย่างน้อย 8 ตัวอักษร",
+            "example": "password123",
+            "minLength": 8
+          },
+          "fullName": {
+            "type": "string",
+            "description": "ชื่อ-นามสกุล",
+            "example": "สมชาย ใจดี",
+            "minLength": 2,
+            "maxLength": 160
+          },
+          "roles": {
+            "description": "รายการ role ของผู้ใช้",
+            "example": [
+              "user"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "fullName"
+        ]
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "รหัส user ในระบบ",
+            "example": "5b31b752-89d1-4db2-90e8-3f83c2d06a7b",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string",
+            "description": "Email ของผู้ใช้",
+            "example": "user@example.com",
+            "format": "email"
+          },
+          "fullName": {
+            "type": "string",
+            "description": "ชื่อ-นามสกุล",
+            "example": "สมชาย ใจดี"
+          },
+          "roles": {
+            "description": "รายการ role ของผู้ใช้",
+            "example": [
+              "user"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "description": "เวลาที่สร้าง user",
+            "example": "2026-05-03T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "description": "เวลาที่แก้ไข user ล่าสุด",
+            "example": "2026-05-03T10:35:00.000Z"
+          }
+        },
+        "required": [
+          "id",
+          "email",
+          "fullName",
+          "roles",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "BulkCreateUsersDto": {
+        "type": "object",
+        "properties": {
+          "users": {
+            "description": "รายการ users ที่ต้องการสร้าง",
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreateUserDto"
+            }
+          }
+        },
+        "required": [
+          "users"
+        ]
+      },
+      "PaginationMetaDto": {
+        "type": "object",
+        "properties": {
+          "page": {
+            "type": "number",
+            "example": 1,
+            "description": "หน้าปัจจุบัน"
+          },
+          "limit": {
+            "type": "number",
+            "example": 20,
+            "description": "จำนวนรายการต่อหน้า"
+          },
+          "total": {
+            "type": "number",
+            "example": 120,
+            "description": "จำนวนรายการทั้งหมด"
+          },
+          "totalPages": {
+            "type": "number",
+            "example": 6,
+            "description": "จำนวนหน้าทั้งหมด"
+          }
+        },
+        "required": [
+          "page",
+          "limit",
+          "total",
+          "totalPages"
+        ]
+      },
+      "UserListResponseDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "description": "รายการ users ในหน้าปัจจุบัน",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserResponseDto"
+            }
+          },
+          "meta": {
+            "description": "ข้อมูล pagination",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaginationMetaDto"
+              }
+            ]
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "UpdateUserDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "description": "Email ของผู้ใช้",
+            "example": "user@example.com",
+            "format": "email"
+          },
+          "password": {
+            "type": "string",
+            "description": "รหัสผ่าน อย่างน้อย 8 ตัวอักษร",
+            "example": "password123",
+            "minLength": 8
+          },
+          "fullName": {
+            "type": "string",
+            "description": "ชื่อ-นามสกุล",
+            "example": "สมชาย ใจดี",
+            "minLength": 2,
+            "maxLength": 160
+          },
+          "roles": {
+            "description": "รายการ role ของผู้ใช้",
+            "example": [
+              "user"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BaseResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true,
+            "description": "สถานะสำเร็จของ response"
+          },
+          "requestId": {
+            "type": "string",
+            "example": "6ddf0ab4-555c-4035-a02f-7ed627b89b529",
+            "description": "Request ID สำหรับ trace log"
+          },
+          "data": {
+            "type": "object",
+            "description": "ข้อมูล response"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2026-05-03T10:30:00.000Z",
+            "description": "เวลาที่สร้าง response ในรูปแบบ ISO string"
+          }
+        },
+        "required": [
+          "success",
+          "requestId",
+          "data",
+          "timestamp"
+        ]
+      },
+      "PaginatedResponseDto": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": true,
+            "description": "สถานะสำเร็จของ response"
+          },
+          "requestId": {
+            "type": "string",
+            "example": "6ddf0ab4-555c-4035-a02f-7ed627b89b529",
+            "description": "Request ID สำหรับ trace log"
+          },
+          "data": {
+            "description": "รายการข้อมูลของหน้าปัจจุบัน",
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "meta": {
+            "description": "ข้อมูล pagination",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PaginationMetaDto"
+              }
+            ]
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "2026-05-03T10:30:00.000Z",
+            "description": "เวลาที่สร้าง response ในรูปแบบ ISO string"
+          }
+        },
+        "required": [
+          "success",
+          "requestId",
+          "data",
+          "meta",
+          "timestamp"
+        ]
+      }
+    }
+  }
+}
