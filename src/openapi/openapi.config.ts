@@ -14,13 +14,16 @@ export function createOpenApiDocument(
   appConfigService: AppConfigService,
 ): OpenAPIObject {
   const appConfig = appConfigService.app;
+  const apiBasePath = appConfig.apiPrefix.startsWith('/')
+    ? appConfig.apiPrefix
+    : `/${appConfig.apiPrefix}`;
   const documentConfig = new DocumentBuilder()
     .setTitle(appConfig.name)
     .setDescription('OpenAPI documentation generated from NestJS source code for Apidog sync.')
     .setVersion(appConfig.version)
-    .addServer(`http://localhost:${appConfig.port}`, 'Development')
-    .addServer('https://staging-api.example.com', 'Staging')
-    .addServer('https://api.example.com', 'Production')
+    .addServer(`http://localhost:${appConfig.port}${apiBasePath}`, 'Development')
+    .addServer(`https://staging-api.example.com${apiBasePath}`, 'Staging')
+    .addServer(`https://api.example.com${apiBasePath}`, 'Production')
     .addTag('Health', 'Service health check endpoints')
     .addTag('users', 'User management endpoints')
     .addBearerAuth(
